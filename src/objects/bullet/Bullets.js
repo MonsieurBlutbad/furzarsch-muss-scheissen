@@ -8,8 +8,12 @@ export default class Bullets extends Phaser.Group {
         this.player = player;
     }
 
-    createBullet() {
-        let sprite = new Shit(this.game, this.player.x, this.player.y);
+    createBullet(speed) {
+        const velocity = {
+            x: -0.66 * speed * Math.sin(this.player.angle * Math.PI / 180),
+            y: speed * Math.cos(this.player.angle * Math.PI / 180),
+        };
+        let sprite = new Shit(this.game, this.player.x, this.player.y, velocity);
         this.add(sprite);
     }
 }

@@ -12,3 +12,7 @@ export const FART_PARTICLE_MAX_SPEED = 160;
 
 export const SHIT_COOLDOWN = 1000;
 export const FART_COOLDOWN = 250;
+
+export const PRESSING_TIME_MAX = 1500;
+export const SHIT_SPEED_MIN = 0;
+export const SHIT_SPEED_MAX = 1250;
