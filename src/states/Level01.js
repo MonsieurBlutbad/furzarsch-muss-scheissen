@@ -72,7 +72,7 @@ export default class GameState extends Phaser.State {
      */
     handleCollisions() {
         // Player & Platforms (including Toilets)
-        this.game.physics.arcade.collide(this.player, [this.platforms, this.toilets.toilet.getHitBox()], function(player, platform) {
+        this.game.physics.arcade.collide(this.player, [...this.toilets.toilet.getHitBox(), this.platforms], function(player, platform) {
                 this.player.hitPlatform(platform);
             }, null,  this
         );
@@ -103,7 +103,7 @@ export default class GameState extends Phaser.State {
         );
         // Bullets & Toilets
         this.game.physics.arcade.overlap(
-            this.player.bullets, this.toilets.toilet.getHitBox(), function(bullet, toilet) {
+            this.player.bullets, ...this.toilets.toilet.getHitBox(), function(bullet, toilet) {
                 toilet.isHit.call(this.toilets.toilet, bullet, toilet);
                 bullet.hitSomething.call(bullet, toilet);
             }, null, this

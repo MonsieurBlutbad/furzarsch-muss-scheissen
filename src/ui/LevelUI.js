@@ -7,12 +7,13 @@ export default class LevelUI extends Phaser.Group {
 		super(game);
 		this.game = game;
 		this.level = level;
-
+        this.fixedToCamera = true;
         this.fartometer = new Fartometer(this.game, 0, 20, 20, 250, 20);
         this.add(this.fartometer);
         this.shitCounter = new ShitCounter(this.game, 20, 50, 0, this.level.player.amountOfFood);
         this.add(this.shitCounter);
         this.successfulShitsText = this.game.add.text(20, 80, '', { font: "32px Arial", fill: "#ffffff", align: "left" });
+        this.add(this.successfulShitsText);
     }
 
     addEventListener() {
