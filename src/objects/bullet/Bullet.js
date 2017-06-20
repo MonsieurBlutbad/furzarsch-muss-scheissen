@@ -7,8 +7,6 @@ export default class Bullet extends Phaser.Sprite {
         this.game = game;
         this.game.physics.arcade.enable(this);
         this.damage = damage;
-        this.checkWorldBounds = true;
-        this.outOfBoundsKill = true;
         this.birthtime = this.game.time.now;
         this.body.gravity.y = GRAVITY;
         this.body.velocity.x = velocity.x;

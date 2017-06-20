@@ -36,15 +36,12 @@ export default class Player extends Phaser.Sprite {
         this.level = level;
         this.controls = controls;
 
-        this.game.stage.addChild(this);
-
         this.bullets = new Bullets(this.game, this);
 
-        this.anchor.setTo(0.5, 0.5);
         this.game.physics.arcade.enable(this);
         this.body.gravity.y = GRAVITY;
-        this.body.collideWorldBounds = true;
         this.body.bounce.y = 0.2;
+        this.anchor.setTo(0.5, 0.5);
 
         // Add Emitter
         this.fartEmitter = new FartEmitter(game, 0, this.height / 2, 50);
@@ -99,10 +96,6 @@ export default class Player extends Phaser.Sprite {
 
         if (this.game.time.now - this.lastFart > FART_COOLDOWN) {
             this.setFartometer(Math.min(100, this.fartometer + 1));
-        }
-
-        if (this.y < 0 || this.y > this.game.height) {
-            this.die();
         }
     }
 

@@ -9,7 +9,7 @@ export default class Collectables extends Phaser.Group {
     }
 
     createCollectable() {
-        let sprite = new Bean(this.game, Math.random() * this.game.width, Math.random() * this.game.height);
+        let sprite = new Bean(this.game, this.game.world.randomX, this.game.world.randomY);
         this.add(sprite);
     }
 }

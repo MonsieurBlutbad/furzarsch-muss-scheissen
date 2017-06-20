@@ -1,4 +1,4 @@
-export const GRAVITY = 1000;
+export const GRAVITY = 600;
 export const JUMP_SPEED_MIN = 250;
 export const JUMP_SPEED_MAX = 800;
 export const JUMP_SPEED_TIME_TO_MAX = 666;

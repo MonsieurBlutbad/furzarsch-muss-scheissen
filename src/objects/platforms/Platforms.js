@@ -10,7 +10,7 @@ export default class Platforms extends Phaser.Group {
         this.floor = new Floor(this.game);
         this.add(this.floor);
         for (let i = 0; i < 3; i++) {
-            let box = new Box(this.game, Math.random() * this.game.width, Math.random() * this.game.height);
+            let box = new Box(this.game, this.game.world.randomX, this.game.world.randomY);
             this.add(box);
         }
     }

@@ -13,6 +13,7 @@ export default class GameState extends Phaser.State {
         this.game.stage.backgroundColor = '#71c5cf';
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
+        this.game.world.setBounds(0, 0,  2000, this.game.height * 1.2);
 
         this.controls = new Controls(this.game);
         
@@ -32,6 +33,11 @@ export default class GameState extends Phaser.State {
         this.addEventListener();
 
         this.player.init();
+
+        this.playerGroup = this.game.add.group();
+        this.playerGroup.add(this.player);
+
+        this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_LOCKON);
     }
 
     addEventListener() {
