@@ -85,23 +85,13 @@ export default class GameState extends Phaser.State {
         );
 
         // Bullets & Platforms & Obstacles
-        this.game.physics.arcade.collide(this.player.bullets, [this.platforms, this.obstacles], function(bullet, platform) {
-            bullet.hitSomething(platform);
-        }, null, this);
+        this.game.physics.arcade.overlap(this.player.bullets,
+            [this.platforms, this.obstacles, this.toilets.toilet.getHitBox(), this.enemies],
+            function(bullet, something) {
+                bullet.hitSomething(bullet, something);
+                something.isHit.call(something, bullet, something);
+            }, null, this);
         // Bullets & Enemies
-        this.game.physics.arcade.overlap(
-            this.player.bullets, this.enemies, function(bullet, enemy) {
-                enemy.isHit(bullet);
-                bullet.hitSomething(enemy);
-            }, null, this
-        );
-        // Bullets & Toilets
-        this.game.physics.arcade.overlap(
-            this.player.bullets, this.toilets.toilet.getHitBox(), function(bullet, toilet) {
-                toilet.isHit.call(this.toilets.toilet, bullet, toilet);
-                bullet.hitSomething.call(bullet, toilet);
-            }, null, this
-        );
     }
 
     togglePause() {

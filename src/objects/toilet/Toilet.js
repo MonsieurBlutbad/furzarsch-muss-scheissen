@@ -66,6 +66,11 @@ export default class Toilet extends Phaser.Sprite {
     isHit(bullet, hitBox) {
         if (hitBox === this.hitBoxBowl) {
             this.shitHitTheBowlEvent.dispatch(this, bullet);
+        } else {
+            console.log(this, this.x, hitBox.x, bullet.x);
+            let shitFlat = this.game.make.sprite(bullet.x - hitBox.x, 0, 'shit_flat');
+            shitFlat.anchor.setTo(0.5, 0.9);
+            hitBox.addChild(shitFlat);
         }
     }
 

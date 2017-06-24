@@ -1,7 +1,8 @@
-export default class Man extends Phaser.Sprite {
+export default class Ass extends Phaser.Sprite
+{
 
     constructor(game, x, y) {
-		super(game, x, y, 'man');
+		super(game, x, y, 'ass');
 
         this.game = game;
         this.game.physics.arcade.enable(this);

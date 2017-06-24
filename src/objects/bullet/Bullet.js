@@ -16,7 +16,7 @@ export default class Bullet extends Phaser.Sprite {
         this.game.add.sprite(this);
     }
 
-    hitSomething(something) {
-        this.kill();
+    hitSomething(bullet, something) {
+        bullet.kill();
     }
 }

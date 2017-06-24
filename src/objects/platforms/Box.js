@@ -10,5 +10,11 @@ export default class Box extends Phaser.Sprite {
         this.game.add.sprite(this);
     }
 
+    isHit(bullet, box) {
+        let shitFlat = this.game.make.sprite(bullet.x - box.x, 0, 'shit_flat');
+        shitFlat.anchor.setTo(0.5, 0.9);
+        box.addChild(shitFlat);
+    }
+
 
 }
