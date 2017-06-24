@@ -9,7 +9,10 @@ import {
     ROTATION_SPEED_MIN,
     ROTATION_SPEED_MAX,
     ROTATION_SPEED_TIME_TO_MAX,
-    SHIT_COOLDOWN
+    SHIT_COOLDOWN,
+    PRESSING_TIME_MAX,
+    SHIT_SPEED_MIN,
+    SHIT_SPEED_MAX
 } from './../../settings/Settings';
 import { remap, EasingFunctions } from './../../helper/Functions';
 
@@ -33,15 +36,12 @@ export default class Player extends Phaser.Sprite {
         this.level = level;
         this.controls = controls;
 
-        this.game.stage.addChild(this);
-
         this.bullets = new Bullets(this.game, this);
 
-        this.anchor.setTo(0.5, 0.5);
         this.game.physics.arcade.enable(this);
         this.body.gravity.y = GRAVITY;
-        this.body.collideWorldBounds = true;
         this.body.bounce.y = 0.2;
+        this.anchor.setTo(0.5, 0.5);
 
         // Add Emitter
         this.fartEmitter = new FartEmitter(game, 0, this.height / 2, 50);
@@ -63,6 +63,7 @@ export default class Player extends Phaser.Sprite {
         this.amountOfShits;
         this.amountOfFood;
         this.fartometer;
+        this.pressingSince = null;
         this.lastFart = 0;
         this.fartingSince = null;
         this.rotatingSince = null;
@@ -96,10 +97,6 @@ export default class Player extends Phaser.Sprite {
         if (this.game.time.now - this.lastFart > FART_COOLDOWN) {
             this.setFartometer(Math.min(100, this.fartometer + 1));
         }
-
-        if (this.y < 0 || this.y > this.game.height) {
-            this.die();
-        }
     }
 
     /**
@@ -120,7 +117,10 @@ export default class Player extends Phaser.Sprite {
             this.fartingSince = null;
         }
 
-        this.controls.shitKey.onDown.add(this.shit, this);
+        this.controls.shitKey.onDown.add(function() {
+            this.pressingSince = this.game.time.now;
+        }, this);
+        this.controls.shitKey.onUp.add(this.shit, this);
     }
 
     /**
@@ -141,9 +141,9 @@ export default class Player extends Phaser.Sprite {
             this.fartingSince = this.game.time.now;
         }
 
-        let fartingSinceInMilliseconds = this.game.time.now - this.fartingSince;
+        const fartingSinceInMilliseconds = this.game.time.now - this.fartingSince;
 
-        let easingFactor = EasingFunctions.linear(
+        const easingFactor = EasingFunctions.linear(
             Math.min(1, fartingSinceInMilliseconds / JUMP_SPEED_TIME_TO_MAX)
         );
 
@@ -167,14 +167,18 @@ export default class Player extends Phaser.Sprite {
         if (!this.amountOfShits > 0) {
             return;
         }
-        if (this.lastShit && this.lastShit + SHIT_COOLDOWN > this.game.time.now) {
-            return;
-        }
+
         this.lastShit = this.game.time.now;
 
-        this.bullets.createBullet();
-        this.setAmountOfShits(this.amountOfShits - 1);
+        const pressingSinceInMilliseconds = Math.min(PRESSING_TIME_MAX, this.game.time.now - this.pressingSince);
+        const easingFactor = EasingFunctions.easeOutCubic(
+            Math.min(1, pressingSinceInMilliseconds / PRESSING_TIME_MAX)
+        );
+        const speed = SHIT_SPEED_MIN + ((SHIT_SPEED_MAX - SHIT_SPEED_MIN) * easingFactor);
 
+        this.bullets.createBullet(speed);
+        this.setAmountOfShits(this.amountOfShits - 1);
+        this.pressingSince = null;
         this.shitTakenEvent.dispatch(this, this.amountOfShits);
     }
 

@@ -13,6 +13,7 @@ export default class GameState extends Phaser.State {
         this.game.stage.backgroundColor = '#71c5cf';
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
+        this.game.world.setBounds(0, 0,  2000, this.game.height * 1.2);
 
         this.controls = new Controls(this.game);
         
@@ -32,6 +33,11 @@ export default class GameState extends Phaser.State {
         this.addEventListener();
 
         this.player.init();
+
+        this.playerGroup = this.game.add.group();
+        this.playerGroup.add(this.player);
+
+        this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_LOCKON);
     }
 
     addEventListener() {
@@ -66,7 +72,7 @@ export default class GameState extends Phaser.State {
      */
     handleCollisions() {
         // Player & Platforms (including Toilets)
-        this.game.physics.arcade.collide(this.player, [this.platforms, this.toilets.toilet.getHitBox()], function(player, platform) {
+        this.game.physics.arcade.collide(this.player, [...this.toilets.toilet.getHitBox(), this.platforms], function(player, platform) {
                 this.player.hitPlatform(platform);
             }, null,  this
         );
@@ -91,15 +97,16 @@ export default class GameState extends Phaser.State {
                 bullet.hitSomething(bullet, something);
                 something.isHit.call(something, bullet, something);
             }, null, this);
-        // Bullets & Enemies
     }
 
-    togglePause() {
+    togglePause()
+    {
         this.game.physics.arcade.isPaused = !this.game.physics.arcade.isPaused;
 
     }
     // Restart the game
-    restart() {
+    restart()
+    {
         this.game.state.restart(true);
     }
 

@@ -20,7 +20,7 @@ export default class Toilets extends Phaser.Group {
     }
 
     addToilet(){
-        this.toilet = new Toilet(this.game, Math.random() * this.game.width, this.game.height - this.level.platforms.floor.height);
+        this.toilet = new Toilet(this.game, Math.random() * this.game.width, this.game.world.height - this.level.platforms.floor.height);
         this.toilet.anchor.setTo(1,1);
         this.add(this.toilet);
         this.toilet.shitHitTheBowlEvent.add(this.shitHitTheBowl, this);

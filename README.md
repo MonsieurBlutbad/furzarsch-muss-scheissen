@@ -1,4 +1,4 @@
-# Phaser ES6 Boilerplate
+# Project is based upon Phaser ES6 Boilerplate
 
 This is a non-professional Phaser template for building standard games using the 
 Phaser framework and ES6/2015.

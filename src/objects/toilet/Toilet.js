@@ -15,11 +15,15 @@ export default class Toilet extends Phaser.Sprite {
         this.hitBoxLidOpened = this.createHitBox('lid opened', 10, this.height * 0.5, -this.width * 0.67, -this.height);
         this.hitBoxBowl = this.createHitBox('bowl', this.width * 0.5, 5, -this.width * 0.58, - this.height * 0.45);
 
+        this.hitBoxes = this.game.add.group();
         this.hitBoxesOpen = this.game.add.group();
         this.hitBoxesClosed = this.game.add.group();
-        this.hitBoxesOpen.addMultiple([this.hitBoxTank, this.hitBoxBody, this.hitBoxLidOpened, this.hitBoxBowl]);
-        this.hitBoxesClosed.addMultiple([this.hitBoxTank, this.hitBoxBody, this.hitBoxLidClosed]);
+        this.hitBoxes.addMultiple([this.hitBoxTank, this.hitBoxBody]);
+        this.hitBoxesOpen.addMultiple([this.hitBoxLidOpened, this.hitBoxBowl]);
+        this.hitBoxesClosed.addMultiple([this.hitBoxLidClosed]);
 
+
+        this.addChild(this.hitBoxes);
         this.addChild(this.hitBoxesOpen);
         this.addChild(this.hitBoxesClosed);
 
@@ -57,9 +61,9 @@ export default class Toilet extends Phaser.Sprite {
      */
     getHitBox() {
         if (this.closed) {
-            return this.hitBoxesClosed;
+            return [this.hitBoxes, this.hitBoxesClosed];
         } else {
-            return this.hitBoxesOpen;
+            return [this.hitBoxes, this.hitBoxesOpen];
         }
     }
 
