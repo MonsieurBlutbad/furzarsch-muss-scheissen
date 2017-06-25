@@ -1,4 +1,8 @@
-export default class Toilet extends Phaser.Sprite {
+const MIN_TIME_TO_TOGGLE_LID = 3000;
+const MAX_TIME_TO_TOGGLE_LID = 8000;
+
+export default class Toilet extends Phaser.Sprite
+{
     constructor(game, x, y) {
         super(game, x, y, 'toilet');
         this.game = game;
@@ -29,8 +33,18 @@ export default class Toilet extends Phaser.Sprite {
 
         this.setClosed(false);
 
-        this.shitHitTheBowlEvent = new Phaser.Signal();
+        this.createEvents();
     }
+
+    /**
+     *
+     */
+    createEvents()
+    {
+        this.shitHitTheBowlEvent = new Phaser.Signal();
+        this.createToggleLidEvent();
+    }
+
 
     /**
      * @param name
@@ -49,6 +63,27 @@ export default class Toilet extends Phaser.Sprite {
         hitBox.body.immovable = true;
         hitBox.isHit = this.isHit;
         return hitBox;
+    }
+
+    /**
+     *
+     */
+    createToggleLidEvent()
+    {
+        this.game.time.events.add(
+            MIN_TIME_TO_TOGGLE_LID + (Math.random() * (MAX_TIME_TO_TOGGLE_LID - MIN_TIME_TO_TOGGLE_LID)),
+            this.toggleLid,
+            this
+        );
+    }
+
+    /**
+     *
+     */
+    toggleLid()
+    {
+        this.setClosed(!this.closed);
+        this.createToggleLidEvent();
     }
 
     setClosed(closed) {

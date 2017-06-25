@@ -23,8 +23,8 @@ export default class GameState extends Phaser.State {
         this.timer = this.game.time.events.loop(1500, this.collectables.createCollectable, this.collectables);
 
         this.items = this.game.add.group();
-        this.enemies = new Enemies(this.game, this);
         this.platforms = new Platforms(this.game, this);
+        this.enemies = new Enemies(this.game, this);
         this.obstacles = new Obstacles(this.game, this);
         this.toilets = new Toilets(this.game, this);
 
