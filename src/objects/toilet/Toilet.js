@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /**
  *
  */
@@ -10,6 +11,14 @@ export default class Toilet extends Phaser.Sprite
      */
     constructor(game, x, y)
     {
+=======
+const MIN_TIME_TO_TOGGLE_LID = 3000;
+const MAX_TIME_TO_TOGGLE_LID = 8000;
+
+export default class Toilet extends Phaser.Sprite
+{
+    constructor(game, x, y) {
+>>>>>>> 1fb547308f7266dda81eca1c0e9792191408ea17
         super(game, x, y, 'toilet');
         this.game = game;
         this.game.physics.arcade.enable(this);
@@ -37,8 +46,18 @@ export default class Toilet extends Phaser.Sprite
 
         this.setClosed(false);
 
-        this.shitHitTheBowlEvent = new Phaser.Signal();
+        this.createEvents();
     }
+
+    /**
+     *
+     */
+    createEvents()
+    {
+        this.shitHitTheBowlEvent = new Phaser.Signal();
+        this.createToggleLidEvent();
+    }
+
 
     /**
      * @param name
@@ -61,10 +80,34 @@ export default class Toilet extends Phaser.Sprite
     }
 
     /**
+<<<<<<< HEAD
      * @param closed
      */
     setClosed(closed)
     {
+=======
+     *
+     */
+    createToggleLidEvent()
+    {
+        this.game.time.events.add(
+            MIN_TIME_TO_TOGGLE_LID + (Math.random() * (MAX_TIME_TO_TOGGLE_LID - MIN_TIME_TO_TOGGLE_LID)),
+            this.toggleLid,
+            this
+        );
+    }
+
+    /**
+     *
+     */
+    toggleLid()
+    {
+        this.setClosed(!this.closed);
+        this.createToggleLidEvent();
+    }
+
+    setClosed(closed) {
+>>>>>>> 1fb547308f7266dda81eca1c0e9792191408ea17
         this.closed = closed;
         this.frame = this.closed? 1: 0;
     }
@@ -89,6 +132,11 @@ export default class Toilet extends Phaser.Sprite
     {
         if (hitBox === this.hitBoxBowl) {
             this.shitHitTheBowlEvent.dispatch(this, bullet);
+        } else {
+            console.log(this, this.x, hitBox.x, bullet.x);
+            let shitFlat = this.game.make.sprite(bullet.x - hitBox.x, 0, 'shit_flat');
+            shitFlat.anchor.setTo(0.5, 0.9);
+            hitBox.addChild(shitFlat);
         }
     }
 

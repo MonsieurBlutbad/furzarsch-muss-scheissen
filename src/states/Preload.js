@@ -5,7 +5,7 @@ export default class Preload extends Phaser.State {
         this.game.load.image('bean', 'image/bean.png');
         this.game.load.image('shit', 'image/shit.png');
         this.game.load.image('shit_flat', 'image/shit_flat.png');
-        this.game.load.image('man', 'image/man.png');
+        this.game.load.image('ass', 'image/ass.png');
         this.game.load.image('grass', 'image/grass.png');
         this.game.load.image('box', 'image/box.png');
         this.game.load.image('spikes', 'image/spikes.png');

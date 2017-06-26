@@ -10,5 +10,10 @@ export default class Spikes extends Phaser.Sprite {
         this.game.add.sprite(this);
     }
 
+    isHit(bullet, object) {
+        let shitFlat = this.game.make.sprite(bullet.x - object.x, 0, 'shit_flat');
+        shitFlat.anchor.setTo(0.5, 0.9);
+        object.addChild(shitFlat);
+    }
 
 }

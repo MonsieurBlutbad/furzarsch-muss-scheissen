@@ -30,10 +30,11 @@ export default class Bullet extends Phaser.Sprite
     }
 
     /**
+     * @param bullet
      * @param something
      */
-    hitSomething(something)
+    hitSomething(bullet, something)
     {
-        this.kill();
+        bullet.kill();
     }
 }

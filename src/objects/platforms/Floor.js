@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /**
  *
  */
@@ -6,6 +7,12 @@ export default class Floor extends Phaser.Sprite
     /**
      * @param game
      */
+=======
+
+export default class Floor extends Phaser.Sprite
+{
+
+>>>>>>> 1fb547308f7266dda81eca1c0e9792191408ea17
     constructor(game)
     {
 		super(game, 0, game.world.height, 'grass');
@@ -18,5 +25,11 @@ export default class Floor extends Phaser.Sprite
         this.game.add.sprite(this);
     }
 
+    isHit(bullet, floor)
+    {
+        let shitFlat = this.game.make.sprite(bullet.x - floor.x,  0, 'shit_flat');
+        shitFlat.anchor.setTo(0.5, 0.9);
+        floor.addChild(shitFlat)
+    }
 
 }

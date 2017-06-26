@@ -34,12 +34,18 @@ export default class GameState extends Phaser.State
 
         this.timer = this.game.time.events.loop(1500, this.collectables.createCollectable, this.collectables);
 
+<<<<<<< HEAD
         this.enemies = new Enemies(this.game, this);
         this.worldObjects.add(this.enemies);
 
         this.platforms = new Platforms(this.game, this);
         this.worldObjects.add(this.platforms);
 
+=======
+        this.items = this.game.add.group();
+        this.platforms = new Platforms(this.game, this);
+        this.enemies = new Enemies(this.game, this);
+>>>>>>> 1fb547308f7266dda81eca1c0e9792191408ea17
         this.obstacles = new Obstacles(this.game, this);
         this.worldObjects.add(this.obstacles);
 
@@ -124,6 +130,7 @@ export default class GameState extends Phaser.State
         );
 
         // Bullets & Platforms & Obstacles
+<<<<<<< HEAD
         this.game.physics.arcade.collide(this.player.bullets, [this.platforms, this.obstacles], function(bullet, platform) {
             bullet.hitSomething(platform);
         }, null, this);
@@ -148,14 +155,28 @@ export default class GameState extends Phaser.State
     /**
      *
      */
+=======
+        this.game.physics.arcade.overlap(this.player.bullets,
+            [this.platforms, this.obstacles, this.toilets.toilet.getHitBox(), this.enemies],
+            function(bullet, something) {
+                bullet.hitSomething(bullet, something);
+                something.isHit.call(something, bullet, something);
+            }, null, this);
+    }
+
+>>>>>>> 1fb547308f7266dda81eca1c0e9792191408ea17
     togglePause()
     {
         this.game.physics.arcade.isPaused = !this.game.physics.arcade.isPaused;
     }
+<<<<<<< HEAD
 
     /**
      *
      */
+=======
+    // Restart the game
+>>>>>>> 1fb547308f7266dda81eca1c0e9792191408ea17
     restart()
     {
         this.game.state.restart(true);
