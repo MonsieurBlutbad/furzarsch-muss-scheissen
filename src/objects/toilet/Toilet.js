@@ -1,11 +1,20 @@
-export default class Toilet extends Phaser.Sprite {
-    constructor(game, x, y) {
+/**
+ *
+ */
+export default class Toilet extends Phaser.Sprite
+{
+    /**
+     * @param game
+     * @param x
+     * @param y
+     */
+    constructor(game, x, y)
+    {
         super(game, x, y, 'toilet');
         this.game = game;
         this.game.physics.arcade.enable(this);
-        this.game.add.sprite(this);
-
         this.enableBody = true;
+        this.anchor.setTo(1,1);
         this.body.immovable = true;
 
         // Create different hitBoxes, so we can check if the shit landed in the bowl.
@@ -21,7 +30,6 @@ export default class Toilet extends Phaser.Sprite {
         this.hitBoxes.addMultiple([this.hitBoxTank, this.hitBoxBody]);
         this.hitBoxesOpen.addMultiple([this.hitBoxLidOpened, this.hitBoxBowl]);
         this.hitBoxesClosed.addMultiple([this.hitBoxLidClosed]);
-
 
         this.addChild(this.hitBoxes);
         this.addChild(this.hitBoxesOpen);
@@ -40,7 +48,8 @@ export default class Toilet extends Phaser.Sprite {
      * @param offsetY
      * @returns {Phaser.Sprite|*}
      */
-    createHitBox(name, width, height, offsetX, offsetY) {
+    createHitBox(name, width, height, offsetX, offsetY)
+    {
         let hitBox = this.game.add.sprite(0, 0);
         hitBox.name = name;
         this.game.physics.arcade.enable(hitBox);
@@ -51,7 +60,11 @@ export default class Toilet extends Phaser.Sprite {
         return hitBox;
     }
 
-    setClosed(closed) {
+    /**
+     * @param closed
+     */
+    setClosed(closed)
+    {
         this.closed = closed;
         this.frame = this.closed? 1: 0;
     }
@@ -59,7 +72,8 @@ export default class Toilet extends Phaser.Sprite {
     /**
      * @returns {*}
      */
-    getHitBox() {
+    getHitBox()
+    {
         if (this.closed) {
             return [this.hitBoxes, this.hitBoxesClosed];
         } else {
@@ -67,18 +81,28 @@ export default class Toilet extends Phaser.Sprite {
         }
     }
 
-    isHit(bullet, hitBox) {
+    /**
+     * @param bullet
+     * @param hitBox
+     */
+    isHit(bullet, hitBox)
+    {
         if (hitBox === this.hitBoxBowl) {
             this.shitHitTheBowlEvent.dispatch(this, bullet);
         }
     }
 
-    debug() {
-        //this.game.debug.body(this.hitBoxTank);
-        //this.game.debug.body(this.hitBoxBody);
-        //this.game.debug.body(this.hitBoxLidClosed);
-        //this.game.debug.body(this.hitBoxLidOpened);
-        //this.game.debug.body(this.hitBoxBowl, '#ff0000');
+    /**
+     *
+     */
+    debug()
+    {
+      /*
+        this.game.debug.body(this.hitBoxTank);
+        this.game.debug.body(this.hitBoxBody);
+        this.game.debug.body(this.hitBoxLidClosed);
+        this.game.debug.body(this.hitBoxLidOpened);
+        this.game.debug.body(this.hitBoxBowl, '#ff0000');*/
     }
 
 }

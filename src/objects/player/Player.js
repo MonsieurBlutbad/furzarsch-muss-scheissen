@@ -39,6 +39,7 @@ export default class Player extends Phaser.Sprite {
         this.bullets = new Bullets(this.game, this);
 
         this.game.physics.arcade.enable(this);
+        this.body.collideWorldBounds=true;
         this.body.gravity.y = GRAVITY;
         this.body.bounce.y = 0.2;
         this.anchor.setTo(0.5, 0.5);
@@ -71,25 +72,38 @@ export default class Player extends Phaser.Sprite {
         this.lastShit = 0;
     }
 
-    init() {
+    /**
+     *
+     */
+    init()
+    {
         this.setAmountOfShits(5);
-        this.setAmountOfFood(0.25);
+        this.setAmountOfFood(0);
         this.setFartometer(100);
         this.setSuccessfulShits(0);
     }
 
-    addEventListener() {
-        this.level.toilets.shitHitTheBowlEvent.add(this.shitHitTheBowl, this)
+    /**
+     *
+     */
+    addEventListener()
+    {
+        this.level.toilet.shitHitTheBowlEvent.add(this.shitHitTheBowl, this)
     }
 
-    shitHitTheBowl() {
+    /**
+     *
+     */
+    shitHitTheBowl()
+    {
         this.setSuccessfulShits(this.successfulShits + 1);
     }
 
     /**
      * Update function. Called once per render cylce.
      */
-    update() {
+    update()
+    {
         this.handleInput();
 
 	    this.fartEmitter.update();
@@ -102,7 +116,8 @@ export default class Player extends Phaser.Sprite {
     /**
      *
      */
-    handleInput() {
+    handleInput()
+    {
         if (this.controls.rotateLeftKey.isDown) {
             this.rotate(-1);
         } else if (this.controls.rotateRightKey.isDown) {
@@ -126,7 +141,8 @@ export default class Player extends Phaser.Sprite {
     /**
      * Make the player fart.
      */
-    fart() {
+    fart()
+    {
         // TODO: apply gravity to downward jumps
         if (this.alive === false) {
             return;
@@ -163,7 +179,8 @@ export default class Player extends Phaser.Sprite {
     /**
      * Drop a shit.
      */
-    shit() {
+    shit()
+    {
         if (!this.amountOfShits > 0) {
             return;
         }
@@ -186,7 +203,8 @@ export default class Player extends Phaser.Sprite {
      * Rotate the player.
      * @param direction
      */
-    rotate(direction) {
+    rotate(direction)
+    {
         if (!this.rotatingSince || this.rotationDirection !== direction) {
             this.rotatingSince = this.game.time.now;
             this.rotationDirection =  direction
@@ -206,7 +224,8 @@ export default class Player extends Phaser.Sprite {
     /**
      * @param amountOfShits
      */
-    setAmountOfShits(amountOfShits) {
+    setAmountOfShits(amountOfShits)
+    {
         if (this.amountOfShits !== amountOfShits) {
             this.amountOfShits = amountOfShits;
             this.amountOfShitsChangedEvent.dispatch(this, this.amountOfShits)
@@ -216,7 +235,8 @@ export default class Player extends Phaser.Sprite {
     /**
      * @param amountOfFood
      */
-    setAmountOfFood(amountOfFood) {
+    setAmountOfFood(amountOfFood)
+    {
         if (this.amountOfFood !== amountOfFood) {
             this.amountOfFood = amountOfFood;
             this.amountOfFoodChangedEvent.dispatch(this, this.amountOfFood)
@@ -226,10 +246,10 @@ export default class Player extends Phaser.Sprite {
     /**
      * @param successfulShits
      */
-    setSuccessfulShits(successfulShits) {
+    setSuccessfulShits(successfulShits)
+    {
         if (this.successfulShits !== successfulShits) {
             this.successfulShits = successfulShits;
-            console.log(this.successfulShits);
             this.successfulShitsChangedEvent.dispatch(this, this.successfulShits)
         }
     }
@@ -247,7 +267,8 @@ export default class Player extends Phaser.Sprite {
     /**
      * @param item
      */
-    collectItem(item) {
+    collectItem(item)
+    {
         this.setAmountOfFood(this.amountOfFood + item.givesFood);
         while (this.amountOfFood >= 1) {
             this.setAmountOfShits(this.amountOfShits + 1);
@@ -259,14 +280,16 @@ export default class Player extends Phaser.Sprite {
      * Slow down the horizontal movement upon hitting a platform.
      * @param platform
      */
-    hitPlatform(platform) {
+    hitPlatform(platform)
+    {
         this.body.velocity.x *= 0.92;
     }
 
     /**
      * Clean up when the player dies. :-(
      */
-    die() {
+    die()
+    {
         this.deathEvent.dispatch(this);
         this.shitTakenEvent.removeAll();
         this.amountOfShitsChangedEvent.removeAll();

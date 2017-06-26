@@ -3,30 +3,48 @@ import Collectables from './../objects/collectable/Collectables';
 import Enemies from './../objects/enemy/Enemies';
 import Platforms from './../objects/platforms/Platforms';
 import Obstacles from './../objects/obstacles/Obstacles';
-import Toilets from './../objects/toilet/Toilets';
+import Toilet from './../objects/toilet/Toilet';
 import LevelUI from './../ui/LevelUI';
 import Controls from './../input/Controls';
 
-export default class GameState extends Phaser.State {
-
-	create() {
+/**
+ *
+ */
+export default class GameState extends Phaser.State
+{
+    /**
+     *
+     */
+	create()
+    {
         this.game.stage.backgroundColor = '#71c5cf';
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.world.setBounds(0, 0,  2000, this.game.height * 1.2);
 
         this.controls = new Controls(this.game);
-        
-        this.player = new Player(this.game, this, this.controls, 100, 245);
+
+        this.worldObjects = this.game.add.group();
+
+        this.player = new Player(this.game, this, this.controls, 100, this.game.world.height * 0.9);
+        this.worldObjects.add(this.player);
 
         this.collectables =  new Collectables(this.game, this);
+        this.worldObjects.add(this.collectables);
+
         this.timer = this.game.time.events.loop(1500, this.collectables.createCollectable, this.collectables);
 
-        this.items = this.game.add.group();
         this.enemies = new Enemies(this.game, this);
+        this.worldObjects.add(this.enemies);
+
         this.platforms = new Platforms(this.game, this);
+        this.worldObjects.add(this.platforms);
+
         this.obstacles = new Obstacles(this.game, this);
-        this.toilets = new Toilets(this.game, this);
+        this.worldObjects.add(this.obstacles);
+
+        this.toilet = new Toilet(this.game, Math.random() * this.game.width, this.game.world.height - this.platforms.floor.height);
+        this.worldObjects.add(this.toilet);
 
         this.levelUI = new LevelUI(this.game, this);
 
@@ -34,13 +52,16 @@ export default class GameState extends Phaser.State {
 
         this.player.init();
 
-        this.playerGroup = this.game.add.group();
-        this.playerGroup.add(this.player);
-
+        this.game.camera.y = this.game.world.height * 0.9;
         this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_LOCKON);
+        this.game.camera.deadzone =new Phaser.Rectangle(this.game.width * 0.4, - (this.game.world.height - this.game.height), this.game.width * 0.2, (this.game.world.height - this.game.height) + this.game.height * 0.4);
     }
 
-    addEventListener() {
+    /**
+     *
+     */
+    addEventListener()
+    {
 	    this.levelUI.addEventListener();
 	    this.player.addEventListener();
         this.player.deathEvent.add(this.restart, this);
@@ -58,23 +79,35 @@ export default class GameState extends Phaser.State {
         this.debug();
     }
 
-    debug() {
-        this.toilets.debug();
+    /**
+     *
+     */
+    debug()
+    {
+        this.toilet.debug();
     }
 
 
-    handleInput() {
+    /**
+     *
+     */
+    handleInput()
+    {
         this.controls.pauseKey.onDown.add(this.togglePause, this);
     }
 
     /**
      * Check for collisions.
      */
-    handleCollisions() {
+    handleCollisions()
+    {
         // Player & Platforms (including Toilets)
-        this.game.physics.arcade.collide(this.player, [...this.toilets.toilet.getHitBox(), this.platforms], function(player, platform) {
+        this.game.physics.arcade.collide(
+            this.player,
+            [...this.toilet.getHitBox(), this.platforms],
+            function(player, platform) {
                 this.player.hitPlatform(platform);
-            }, null,  this
+            }, null, this
         );
         // Player & Obstacles
         this.game.physics.arcade.overlap(
@@ -103,19 +136,28 @@ export default class GameState extends Phaser.State {
         );
         // Bullets & Toilets
         this.game.physics.arcade.overlap(
-            this.player.bullets, ...this.toilets.toilet.getHitBox(), function(bullet, toilet) {
-                toilet.isHit.call(this.toilets.toilet, bullet, toilet);
-                bullet.hitSomething.call(bullet, toilet);
-            }, null, this
+            this.player.bullets,
+            [...this.toilet.getHitBox()],
+            function(bullet, hitbox) {
+                hitbox.isHit.call(this.toilet, bullet, hitbox);
+                bullet.hitSomething(hitbox);
+            }.bind(this), null, this
         );
     }
 
-    togglePause() {
+    /**
+     *
+     */
+    togglePause()
+    {
         this.game.physics.arcade.isPaused = !this.game.physics.arcade.isPaused;
-
     }
-    // Restart the game
-    restart() {
+
+    /**
+     *
+     */
+    restart()
+    {
         this.game.state.restart(true);
     }
 

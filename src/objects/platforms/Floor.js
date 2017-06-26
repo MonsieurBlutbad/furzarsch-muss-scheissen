@@ -1,7 +1,13 @@
-
-export default class Floor extends Phaser.Sprite {
-
-    constructor(game) {
+/**
+ *
+ */
+export default class Floor extends Phaser.Sprite
+{
+    /**
+     * @param game
+     */
+    constructor(game)
+    {
 		super(game, 0, game.world.height, 'grass');
         this.game = game;
         this.game.physics.arcade.enable(this);

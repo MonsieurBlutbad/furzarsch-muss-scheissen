@@ -1,7 +1,20 @@
 import {GRAVITY} from './../../settings/Settings';
 
-export default class Bullet extends Phaser.Sprite {
-    constructor(game, x, y, key, damage, velocity) {
+/**
+ *
+ */
+export default class Bullet extends Phaser.Sprite
+{
+    /**
+     * @param game
+     * @param x
+     * @param y
+     * @param key
+     * @param damage
+     * @param velocity
+     */
+    constructor(game, x, y, key, damage, velocity)
+    {
         super(game, x, y, key);
 
         this.game = game;
@@ -16,7 +29,11 @@ export default class Bullet extends Phaser.Sprite {
         this.game.add.sprite(this);
     }
 
-    hitSomething(something) {
+    /**
+     * @param something
+     */
+    hitSomething(something)
+    {
         this.kill();
     }
 }

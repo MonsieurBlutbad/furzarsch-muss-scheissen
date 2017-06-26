@@ -1,10 +1,17 @@
 /**
- * Created by BK on 06.06.17.
+ *
  */
-
-export default class ShitCounter extends Phaser.Group {
-
-    constructor(game, x, y, amountOfShits, amountOfFood ) {
+export default class ShitCounter extends Phaser.Group
+{
+    /**
+     * @param game
+     * @param x
+     * @param y
+     * @param amountOfShits
+     * @param amountOfFood
+     */
+    constructor(game, x, y, amountOfShits, amountOfFood )
+    {
         super(game);
         this.game = game;
         this.x = x;
@@ -12,7 +19,12 @@ export default class ShitCounter extends Phaser.Group {
         this.draw(amountOfShits, amountOfFood);
     }
 
-    draw(amountOfShits, amountOfFood) {
+    /**
+     * @param amountOfShits
+     * @param amountOfFood
+     */
+    draw(amountOfShits, amountOfFood)
+    {
         this.reset();
         for (let i = 0; i < amountOfShits; i++) {
             let shit = this.game.add.sprite(i * 22, 0, 'shit');
@@ -31,10 +43,13 @@ export default class ShitCounter extends Phaser.Group {
         }
     }
 
-    reset() {
+    /**
+     *
+     */
+    reset()
+    {
         this.forEach(function (shit) {
             shit.kill();
         });
     }
-
 }

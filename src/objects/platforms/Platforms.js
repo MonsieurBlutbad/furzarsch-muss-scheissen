@@ -1,9 +1,17 @@
 import Floor from './Floor';
 import Box from './Box';
 
-export default class Platforms extends Phaser.Group {
-
-    constructor(game, level) {
+/**
+ *
+ */
+export default class Platforms extends Phaser.Group
+{
+    /**
+     * @param game
+     * @param level
+     */
+    constructor(game, level)
+    {
         super(game);
         this.game = game;
         this.level = level;
