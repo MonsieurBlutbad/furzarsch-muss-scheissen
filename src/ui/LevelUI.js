@@ -1,6 +1,7 @@
 import RainbowText from './../text/RainbowText';
 import Fartometer from './Fartometer';
 import ShitCounter from './ShitCounter';
+import Score from './Score';
 
 export default class LevelUI extends Phaser.Group {
     constructor(game, level) {
@@ -8,19 +9,24 @@ export default class LevelUI extends Phaser.Group {
 		this.game = game;
 		this.level = level;
         this.fixedToCamera = true;
-        this.fartometer = new Fartometer(this.game, 0, 20, 20, 250, 20);
+        this.fartometer = new Fartometer(this.game, 0, 20, 20, this.level.player.fartometer, 20, this.level.player);
         this.add(this.fartometer);
         this.shitCounter = new ShitCounter(this.game, 20, 50, 0, this.level.player.amountOfFood);
         this.add(this.shitCounter);
-        this.successfulShitsText = this.game.add.text(20, 80, '', { font: "32px Arial", fill: "#ffffff", align: "left" });
-        this.add(this.successfulShitsText);
+        this.score = new Score(this.game, 20, 100);
+        this.add(this.score);
     }
 
     addEventListener() {
         this.level.player.amountOfShitsChangedEvent.add(this.updateAmountOfShitsListener, this);
         this.level.player.amountOfFoodChangedEvent.add(this.updateAmountOfFoodListener, this);
         this.level.player.fartometerChangedEvent.add(this.updateFartometerListener, this);
-        this.level.player.successfulShitsChangedEvent.add(this.updateSuccessfulShitsListener, this);
+        this.level.player.scoreChangedEvent.add(this.score.updateScoreListener, this.score);
+        this.level.player.scoreChangedEvent.add(this.updateScoreListener, this);
+    }
+
+    updateScoreListener(player, score, incremenent) {
+
     }
 
     updateAmountOfShitsListener(context, amountOfShits) {
@@ -31,12 +37,8 @@ export default class LevelUI extends Phaser.Group {
         this.shitCounter.draw(context.amountOfShits, amountOfFood);
     }
 
-    updateFartometerListener(context, fartometer) {
-        this.fartometer.draw(fartometer);
-    }
-
-    updateSuccessfulShitsListener(context, successfulShits) {
-        this.successfulShitsText.text = successfulShits;
+    updateFartometerListener(context, fartometer, fartometerMax) {
+        this.fartometer.draw(fartometer, fartometerMax);
     }
 
 }

@@ -8,16 +8,9 @@ export default class Enemies extends Phaser.Group
 		super(game);
         this.game = game;
         this.level = level;
-        this.createAss();
         for (let i = 0; i < 10; i++) {
        //     this.createEnemy();
         }
-    }
-
-    createAss()
-    {
-        let ass = new Ass(this.game, Math.random() * this.game.width, this.game.world.height - this.level.platforms.floor.height);
-        this.add(ass);
     }
 
     createPenis()

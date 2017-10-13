@@ -34,7 +34,7 @@ export default class ShitCounter extends Phaser.Group
             let hollowShit = this.game.add.sprite(amountOfShits * 22, 0, 'shit');
             hollowShit.alpha = 0.2;
             let fillerShit = this.game.add.sprite(amountOfShits * 22, 0, 'shit');
-            const fillerShitHeight = amountOfFood * fillerShit.height;
+            const fillerShitHeight = (amountOfFood / 100) * fillerShit.height;
             let cropRect = new Phaser.Rectangle(0, fillerShit.height, fillerShit.width, -fillerShitHeight);
             fillerShit.y = fillerShit.height;
             fillerShit.crop(cropRect);

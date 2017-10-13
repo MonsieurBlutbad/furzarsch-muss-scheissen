@@ -1,20 +1,14 @@
-export default class Bean extends Phaser.Sprite {
+import Collectable from './Collectable';
+
+export default class Bean extends Collectable {
 
     constructor(game, x, y) {
 		super(game, x, y, 'bean');
-
-        this.game = game;
-        this.game.physics.arcade.enable(this);
-
-        this.checkWorldBounds = true;
-        this.outOfBoundsKill = true;
-
-        this.givesFood = 0.25;
-        this.game.add.sprite(this);
-    }
-
-    isCollected() {
-        this.kill();
+        this.givesFood = 25;
+        this.givesFarts = 100;
+        this.scale.setTo(0.5, 0.5);
+        this.x += (0.5 * 64) / 2;
+        this.y += (0.5 * 64) / 2;
     }
 
 }

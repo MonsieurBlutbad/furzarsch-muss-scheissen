@@ -10,6 +10,9 @@ import {
     ROTATION_SPEED_MAX,
     ROTATION_SPEED_TIME_TO_MAX,
     SHIT_COOLDOWN,
+    POINTS_FOR_SHIT_IN_TOILET,
+    DIARRHEA_DURATION,
+    DIARRHEA_SHIT_FREQUENCE,
     PRESSING_TIME_MAX,
     SHIT_SPEED_MIN,
     SHIT_SPEED_MAX
@@ -31,6 +34,7 @@ export default class Player extends Phaser.Sprite {
      */
     constructor(game, level, controls, x, y) {
 		super(game, x, y, 'player');
+        console.log('New Player', x, y);
 
         this.game = game;
         this.level = level;
@@ -39,7 +43,7 @@ export default class Player extends Phaser.Sprite {
         this.bullets = new Bullets(this.game, this);
 
         this.game.physics.arcade.enable(this);
-        this.body.collideWorldBounds=true;
+        this.body.collideWorldBounds = true;
         this.body.gravity.y = GRAVITY;
         this.body.bounce.y = 0.2;
         this.anchor.setTo(0.5, 0.5);
@@ -54,22 +58,28 @@ export default class Player extends Phaser.Sprite {
         // Add Signals
         this.shitTakenEvent = new Phaser.Signal();
         this.amountOfShitsChangedEvent = new Phaser.Signal();
-        this.footEatenEvent = new Phaser.Signal();
+        this.foodEatenEvent = new Phaser.Signal();
         this.amountOfFoodChangedEvent = new Phaser.Signal();
         this.fartometerChangedEvent = new Phaser.Signal();
-        this.successfulShitsChangedEvent = new Phaser.Signal();
+        this.scoreChangedEvent = new Phaser.Signal();
         this.deathEvent = new Phaser.Signal();
 
         // Set starting values
         this.amountOfShits;
         this.amountOfFood;
         this.fartometer;
+        this.fartometerMax;
         this.pressingSince = null;
         this.lastFart = 0;
         this.fartingSince = null;
         this.rotatingSince = null;
         this.rotationDirection = null;
+        this.hasDiarrhea = false;
+        this.hasDiarrheaSince = null;
         this.lastShit = 0;
+        this.combo = 0;
+        this.score = 0;
+        this.lastShittedToilet = null;
     }
 
     /**
@@ -79,7 +89,8 @@ export default class Player extends Phaser.Sprite {
     {
         this.setAmountOfShits(5);
         this.setAmountOfFood(0);
-        this.setFartometer(100);
+        this.setFartometerMax(200);
+        this.setFartometer(200);
         this.setSuccessfulShits(0);
     }
 
@@ -88,15 +99,29 @@ export default class Player extends Phaser.Sprite {
      */
     addEventListener()
     {
-        this.level.toilet.shitHitTheBowlEvent.add(this.shitHitTheBowl, this)
+        this.level.toilets.shitHitTheBowlEvent.add(this.shitHitTheBowl, this);
+        this.level.toilets.missedToiletEvent.add(this.missedToilet, this);
     }
 
     /**
      *
      */
-    shitHitTheBowl()
+    shitHitTheBowl(toilet)
     {
+        this.lastShittedToilet = toilet;
+        if (toilet.shits === 1) {
+            this.setCombo(this.combo + 1);
+        }
         this.setSuccessfulShits(this.successfulShits + 1);
+        this.addPoints(POINTS_FOR_SHIT_IN_TOILET * this.combo);
+    }
+
+    /**
+     *
+     */
+    missedToilet() {
+        console.log(':(');
+        this.setCombo(0);
     }
 
     /**
@@ -108,8 +133,21 @@ export default class Player extends Phaser.Sprite {
 
 	    this.fartEmitter.update();
 
+        // Fartometer Handling
         if (this.game.time.now - this.lastFart > FART_COOLDOWN) {
-            this.setFartometer(Math.min(100, this.fartometer + 1));
+            this.setFartometer(Math.min(this.fartometerMax, this.fartometer + 1));
+        }
+
+        // Diarrhea Handling
+        if (this.hasDiarrhea) {
+            const now = this.game.time.now;
+            if (this.hasDiarrheaSince +  DIARRHEA_DURATION > now) {
+                if (!this.lastShit || this.lastShit + DIARRHEA_SHIT_FREQUENCE <= now ) {
+                    this.shit();
+                }
+            } else {
+                this.setHasDiarrhea(false);
+            }
         }
     }
 
@@ -181,7 +219,7 @@ export default class Player extends Phaser.Sprite {
      */
     shit()
     {
-        if (!this.amountOfShits > 0) {
+        if (!this.hasDiarrhea && !this.amountOfShits > 0) {
             return;
         }
 
@@ -194,7 +232,9 @@ export default class Player extends Phaser.Sprite {
         const speed = SHIT_SPEED_MIN + ((SHIT_SPEED_MAX - SHIT_SPEED_MIN) * easingFactor);
 
         this.bullets.createBullet(speed);
-        this.setAmountOfShits(this.amountOfShits - 1);
+        if (!this.hasDiarrhea) {
+            this.setAmountOfShits(this.amountOfShits - 1);
+        }
         this.pressingSince = null;
         this.shitTakenEvent.dispatch(this, this.amountOfShits);
     }
@@ -219,6 +259,26 @@ export default class Player extends Phaser.Sprite {
         const speed = ROTATION_SPEED_MIN + ((ROTATION_SPEED_MAX - ROTATION_SPEED_MIN) * easingFactor);
 
 		this.angle += direction * speed;
+    }
+
+    /**
+     *
+     */
+    setHasDiarrhea(hasDiarrhea)
+    {
+        const now = this.game.time.now;
+
+        // Diarrhea cannot be stopped!!!
+        if (this.hasDiarrhea && !hasDiarrhea && this.hasDiarrheaSince + DIARRHEA_DURATION > now) {
+            return;
+        }
+
+        this.hasDiarrhea = hasDiarrhea;
+        if (this.hasDiarrhea) {
+            this.hasDiarrheaSince = this.game.time.now;
+        } else {
+            this.hasDiarrheaSince = null;
+        }
     }
 
     /**
@@ -250,8 +310,16 @@ export default class Player extends Phaser.Sprite {
     {
         if (this.successfulShits !== successfulShits) {
             this.successfulShits = successfulShits;
-            this.successfulShitsChangedEvent.dispatch(this, this.successfulShits)
         }
+    }
+
+    /**
+     * @param points
+     */
+    addPoints(points)
+    {
+        this.score += points;
+        this.scoreChangedEvent.dispatch(this, this.score, points)
     }
 
     /**
@@ -259,9 +327,25 @@ export default class Player extends Phaser.Sprite {
      */
     setFartometer(fartometer) {
         if (this.fartometer !== fartometer) {
-            this.fartometer = fartometer;
-            this.fartometerChangedEvent.dispatch(this, this.fartometer)
+            this.fartometer = Math.min(this.fartometerMax, Math.max(0, fartometer));
+            this.fartometerChangedEvent.dispatch(this, this.fartometer, this.fartometerMax)
         }
+    }
+
+    /**
+     * @param fartometerMax
+     */
+    setFartometerMax(fartometerMax) {
+        if (this.fartometerMax !== fartometerMax) {
+            const difference = fartometerMax - this.fartometerMax;
+            this.fartometerMax = fartometerMax;
+            this.setFartometer(this.fartometer + difference);
+            this.fartometerChangedEvent.dispatch(this, this.fartometer, this.fartometerMax)
+        }
+    }
+
+    setCombo(combo) {
+        this.combo = combo;
     }
 
     /**
@@ -270,19 +354,24 @@ export default class Player extends Phaser.Sprite {
     collectItem(item)
     {
         this.setAmountOfFood(this.amountOfFood + item.givesFood);
-        while (this.amountOfFood >= 1) {
+        this.setFartometer(this.fartometer + item.givesFarts);
+        this.setHasDiarrhea(item.givesDiarrhea);
+
+        while (this.amountOfFood >= 100) {
             this.setAmountOfShits(this.amountOfShits + 1);
-            this.setAmountOfFood(Math.max(0, this.amountOfFood - 1));
+            this.setAmountOfFood(Math.max(0, this.amountOfFood - 100));
         }
     }
 
     /**
-     * Slow down the horizontal movement upon hitting a platform.
-     * @param platform
+     * @param object
      */
-    hitPlatform(platform)
+    hitsObject(object)
     {
         this.body.velocity.x *= 0.92;
+        if (object.killsPlayerOnHit) {
+            this.die();
+        }
     }
 
     /**
@@ -290,14 +379,8 @@ export default class Player extends Phaser.Sprite {
      */
     die()
     {
+        console.log('Player die');
         this.deathEvent.dispatch(this);
-        this.shitTakenEvent.removeAll();
-        this.amountOfShitsChangedEvent.removeAll();
-        this.footEatenEvent.removeAll();
-        this.amountOfFoodChangedEvent.removeAll();
-        this.fartometerChangedEvent.removeAll();
-        this.deathEvent.removeAll();
-        this.game.stage.removeChild(this);
     }
 
 }

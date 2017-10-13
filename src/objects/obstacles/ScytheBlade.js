@@ -1,9 +1,9 @@
 import Obstacle from './Obstacle';
 
 /**
- * Class Spikes.
+ * Class Box.
  */
-export default class Spikes extends Obstacle {
+export default class ScytheBlade extends Obstacle {
 
     /**
      * @param game
@@ -11,7 +11,8 @@ export default class Spikes extends Obstacle {
      * @param y
      */
     constructor(game, x, y) {
-		super(game, x, y, 'spikes');
+		super(game, x, y, 'scythe_blade');
         this.killsPlayerOnHit = true;
+        this.events.onOutOfBounds.removeAll();
     }
 }

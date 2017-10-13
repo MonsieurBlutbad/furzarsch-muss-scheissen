@@ -3,7 +3,7 @@ import Bullet from './Bullet';
 /**
  *
  */
-export default class Shit extends Bullet {
+export default class Diarrhea extends Bullet {
     /**
      * @param game
      * @param x
@@ -12,6 +12,6 @@ export default class Shit extends Bullet {
      */
     constructor(game, x, y, velocity)
     {
-        super(game, x, y, 'shit', 100, velocity);
+        super(game, x, y, 'diarrhea', 100, velocity);
     }
 }

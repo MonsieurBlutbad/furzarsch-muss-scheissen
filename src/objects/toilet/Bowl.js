@@ -1,13 +1,15 @@
 
-export default class Box extends Phaser.Sprite {
+export default class Bowl extends Phaser.Sprite {
 
     constructor(game, x, y) {
-		super(game, x, y, 'box');
+		super(game, x, y, 'toilet_bowl');
         this.game = game;
         this.game.physics.arcade.enable(this);
         this.enableBody = true;
         this.body.immovable = true;
         this.game.add.sprite(this);
+        this.checkWorldBounds = true;
+        this.events.onOutOfBounds.add(this.destroy.bind(this));
     }
 
     isHit(bullet, box) {
@@ -15,6 +17,5 @@ export default class Box extends Phaser.Sprite {
         shitFlat.anchor.setTo(0.5, 0.9);
         box.addChild(shitFlat);
     }
-
 
 }

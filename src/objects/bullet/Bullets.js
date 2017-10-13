@@ -1,4 +1,5 @@
 import Shit from './Shit';
+import Diarrhea from './Diarrhea';
 
 export default class Bullets extends Phaser.Group {
 
@@ -13,7 +14,11 @@ export default class Bullets extends Phaser.Group {
             x: -0.66 * speed * Math.sin(this.player.angle * Math.PI / 180),
             y: speed * Math.cos(this.player.angle * Math.PI / 180),
         };
-        let sprite = new Shit(this.game, this.player.x, this.player.y, velocity);
+        let Bullet = Shit;
+        if (this.player.hasDiarrhea) {
+            Bullet = Diarrhea;
+        }
+        let sprite = new Bullet(this.game, this.player.x, this.player.y, velocity);
         this.add(sprite);
     }
 }
