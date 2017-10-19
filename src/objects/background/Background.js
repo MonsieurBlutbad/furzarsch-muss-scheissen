@@ -11,6 +11,8 @@ export default class Background extends Phaser.Group {
         this.add(this.sky);
         this.mountains = new Mountains(this.game);
         this.add(this.mountains);
+
+        this.moveMountains = true;
     }
 
 
@@ -19,6 +21,15 @@ export default class Background extends Phaser.Group {
      */
     update()
     {
-        this.mountains.tilePosition.x -= 0.5;
+        this.mountains.update();
     }
+
+    /**
+     *
+     */
+    onPlayerDeathStart()
+    {
+        this.mountains.move = false;
+    }
+
 }

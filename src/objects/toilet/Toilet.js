@@ -1,3 +1,5 @@
+import WaterEmitter from './../../emitter/WaterEmitter'
+
 const MIN_TIME_TO_TOGGLE_LID = 3000;
 const MAX_TIME_TO_TOGGLE_LID = 8000;
 
@@ -49,6 +51,9 @@ export default class Toilet extends Phaser.Sprite
         this.addChild(this.hitBoxesClosed);
 
         this.setClosed(false);
+
+        this.waterEmitter = new WaterEmitter(this.game);
+        this.hitBoxBowl.addChild(this.waterEmitter);
 
         this.checkWorldBounds = true;
         this.events.onOutOfBounds.add(function() {
@@ -131,6 +136,7 @@ export default class Toilet extends Phaser.Sprite
          if (hitBox === this.hitBoxBowl) {
             this.shits ++;
             this.shitHitTheBowlEvent.dispatch(this, bullet);
+            this.waterEmitter.start();
             console.log('It\'s a shit in the bowl!!!!');
         } else {
             console.log(this, this.x, hitBox.x, bullet.x);

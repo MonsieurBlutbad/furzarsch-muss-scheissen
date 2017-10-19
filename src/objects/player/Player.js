@@ -1,4 +1,6 @@
 import FartEmitter from './../../emitter/FartEmitter';
+import Shit from './../bullet/Shit';
+import Diarrhea from './../bullet/Diarrhea';
 import Bullets from './../bullet/Bullets';
 import {
     GRAVITY,
@@ -35,7 +37,7 @@ export default class Player extends Phaser.Sprite {
     constructor(game, level, controls, x, y) {
 		super(game, x, y, 'player');
         console.log('New Player', x, y);
-
+        this.frame = 0;
         this.game = game;
         this.level = level;
         this.controls = controls;
@@ -63,6 +65,7 @@ export default class Player extends Phaser.Sprite {
         this.fartometerChangedEvent = new Phaser.Signal();
         this.scoreChangedEvent = new Phaser.Signal();
         this.deathEvent = new Phaser.Signal();
+        this.deathStartEvent = new Phaser.Signal();
 
         // Set starting values
         this.amountOfShits;
@@ -101,6 +104,7 @@ export default class Player extends Phaser.Sprite {
     {
         this.level.toilets.shitHitTheBowlEvent.add(this.shitHitTheBowl, this);
         this.level.toilets.missedToiletEvent.add(this.missedToilet, this);
+        this.deathStartEvent.add(this.onDeath, this);
     }
 
     /**
@@ -120,7 +124,6 @@ export default class Player extends Phaser.Sprite {
      *
      */
     missedToilet() {
-        console.log(':(');
         this.setCombo(0);
     }
 
@@ -163,6 +166,9 @@ export default class Player extends Phaser.Sprite {
         } else {
             this.rotatingSince = null;
         }
+
+
+      //  this.rotation = this.game.physics.arcade.angleToPointer(this) + 90;
 
         if (this.controls.fartKey.isDown) {
             this.fart();
@@ -231,7 +237,13 @@ export default class Player extends Phaser.Sprite {
         );
         const speed = SHIT_SPEED_MIN + ((SHIT_SPEED_MAX - SHIT_SPEED_MIN) * easingFactor);
 
-        this.bullets.createBullet(speed);
+        const velocity = {
+            x: -0.66 * speed * Math.sin(this.angle * Math.PI / 180),
+            y: speed * Math.cos(this.angle * Math.PI / 180),
+        };
+
+        this.bullets.createBullet(this.x, this.y, velocity, this.hasDiarrhea ? Diarrhea : Shit);
+
         if (!this.hasDiarrhea) {
             this.setAmountOfShits(this.amountOfShits - 1);
         }
@@ -379,8 +391,23 @@ export default class Player extends Phaser.Sprite {
      */
     die()
     {
-        console.log('Player die');
-        this.deathEvent.dispatch(this);
+        console.log(':(');
+        if (this.alive) {
+            console.log('Player die');
+            this.alive = false;
+            this.deathStartEvent.dispatch(this);
+        }
+    }
+
+    onDeath()
+    {
+        this.visible = false;
+        this.body.moves = false;
+        this.game.time.events.add(3000, function() {
+            this.deathEvent.dispatch(this);
+            this.destroy();
+        }.bind(this), this);
+
     }
 
 }

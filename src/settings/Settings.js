@@ -24,3 +24,5 @@ export const HEIGHT = 768;
 export const CAMERA_SPEED = 1;
 
 export const POINTS_FOR_SHIT_IN_TOILET = 100;
+
+export const BACKGROUND_MOUNTAINS_SPEED = -0.3;

@@ -1,6 +1,6 @@
 import Player from './../objects/player/Player';
+import DeadPlayer from './../objects/player/DeadPlayer';
 import Background from './../objects/background/Background';
-import Mountains from './../objects/background/Mountains';
 import Collectables from './../objects/collectable/Collectables';
 import Enemies from './../objects/enemy/Enemies';
 import Obstacles from './../objects/obstacles/Obstacles';
@@ -23,6 +23,8 @@ export default class GameState extends Phaser.State
 
         this.currentScreen = 0;
         this.enteredNewScreenEvent = new Phaser.Signal();
+
+        this.moveCamera = true;
 
         this.game.world.width = WIDTH * 2  ;
         this.game.world.height = HEIGHT;
@@ -97,6 +99,15 @@ export default class GameState extends Phaser.State
 
         grid.splice(grid.length - gridWidth, gridWidth);
 
+
+        for (let i = 0; i < 1; i++) {
+            let gridIndex = grid.length - (Math.floor(Math.random() * (gridWidth - 2)) + 1);
+            this.enemies.addEvilAss(offsetX + grid[gridIndex][0], grid[gridIndex][1]);
+            if (gridIndex > -1) {
+                grid.splice(gridIndex -1 , 3);
+            }
+        }
+
         for (let i = 0; i < 8; i++) {
             let gridIndex = Math.floor(Math.random() * grid.length);
             this.obstacles.addBox(offsetX + grid[gridIndex][0],  grid[gridIndex][1]);
@@ -153,7 +164,9 @@ export default class GameState extends Phaser.State
     {
 	    this.levelUI.addEventListener();
 	    this.player.addEventListener();
-        this.player.deathEvent.add(this.restart, this);
+        this.player.deathStartEvent.add(this.onPlayerDeathStart, this);
+        this.player.deathStartEvent.add(this.background.onPlayerDeathStart, this.background);
+        this.player.deathEvent.add(this.onPlayerDeath, this);
         this.enteredNewScreenEvent.add(this.addNewObjects , this);
     }
 
@@ -165,7 +178,7 @@ export default class GameState extends Phaser.State
     update() {
         this.handleCollisions();
         this.handleInput();
-        this.moveCamera();
+        this.updateCamera();
         this.worldObjects.forEachExists(
             function(child) {
                 if (typeof child.update !== 'undefined') {
@@ -190,13 +203,15 @@ export default class GameState extends Phaser.State
     /**
      *
      */
-    moveCamera()
+    updateCamera()
     {
-        this.game.camera.x += CAMERA_SPEED;
-        this.game.world.setBounds(this.game.camera.x, 0, this.game.world.width + CAMERA_SPEED, this.game.world.height);
-        if (Math.floor(this.game.camera.x / WIDTH) > this.currentScreen) {
-            this.currentScreen = Math.floor(this.game.camera.x / WIDTH);
-            this.enteredNewScreenEvent.dispatch(this.currentScreen + 1);
+        if (this.moveCamera) {
+            this.game.camera.x += CAMERA_SPEED;
+            this.game.world.setBounds(this.game.camera.x, 0, this.game.world.width + CAMERA_SPEED, this.game.world.height);
+            if (Math.floor(this.game.camera.x / WIDTH) > this.currentScreen) {
+                this.currentScreen = Math.floor(this.game.camera.x / WIDTH);
+                this.enteredNewScreenEvent.dispatch(this.currentScreen + 1);
+            }
         }
     }
 
@@ -223,6 +238,14 @@ export default class GameState extends Phaser.State
             player.hitsObject(object);
         };
 
+        const enemyBullets = [];
+
+        this.enemies.forEachExists(function(child) {
+            if (child.bullets) {
+                enemyBullets.push(child.bullets);
+            }
+        });
+
         // Player & Toilets
         this.toilets.forEachExists(
             function(child) {
@@ -243,6 +266,12 @@ export default class GameState extends Phaser.State
                 );
             }, this
         );
+        // Player & Enemies
+        this.game.physics.arcade.collide(
+            this.player,
+            this.enemies,
+            playerHitsObject, null, this
+        );
 
         // Player & Items
         this.game.physics.arcade.overlap(
@@ -254,25 +283,54 @@ export default class GameState extends Phaser.State
         );
 
         const somethingIsHitByBullet = function(something, bullet) {
-            bullet.hitSomething(bullet, something);
-            something.isHit.call(something, bullet, something);
+            if (bullet.isArmed) {
+                bullet.hitSomething(bullet, something);
+                something.isHit.call(something, bullet, something);
+            }
         };
 
         // Bullets & Obstacles
         this.obstacles.forEachExists(
             function(child) {
                 this.game.physics.arcade.collide(
-                    this.player.bullets,
+                    [
+                        this.player.bullets,
+                        ...enemyBullets
+                    ],
                     child.getHitBox(),
                     somethingIsHitByBullet, null, this
                 );
             }, this
         );
 
+        // Enemy Bullets & Player
+        this.game.physics.arcade.overlap(
+            this.player,
+            [...enemyBullets],
+            function(player, bullet) {
+                console.log('hiiiit');
+                bullet.hitSomething(bullet, player);
+                player.die();
+            }
+        );
+
         // Bullets & Enemies
-        this.game.physics.arcade.overlap(this.player.bullets,
+        this.game.physics.arcade.overlap(
+            [this.player.bullets, ...enemyBullets],
             this.enemies,
-            somethingIsHitByBullet, null, this
+            function(bullet, something) {
+                if (bullet.isArmed) {
+                    bullet.hitSomething(bullet, something);
+                    something.isHit.call(something, bullet, something);
+                }
+            }, null, this
+        );
+
+        this.game.physics.arcade.collide(
+            this.obstacles, this.enemies,
+            function(obstacle, enemy) {
+                enemy.speed *= -1;
+            }
         );
 
         // Bullets & Toilets
@@ -282,9 +340,10 @@ export default class GameState extends Phaser.State
                     this.player.bullets,
                     [...child.getHitBox()],
                     function(bullet, something) {
-                        console.log(something, bullet);
-                        bullet.hitSomething(bullet, something);
-                        something.isHit.call(child, bullet, something);
+                        if (bullet.isArmed) {
+                            bullet.hitSomething(bullet, something);
+                            something.isHit.call(child, bullet, something);
+                        }
                     }, null, this
                 );
             }, this
@@ -298,6 +357,24 @@ export default class GameState extends Phaser.State
     togglePause()
     {
         this.game.physics.arcade.isPaused = !this.game.physics.arcade.isPaused;
+    }
+
+    /**
+     *
+     */
+    onPlayerDeathStart()
+    {
+        let deadPlayer = new DeadPlayer(this.game, this.player);
+        this.worldObjects.add(deadPlayer);
+        this.moveCamera = false;
+    }
+
+    /**
+     *
+     */
+    onPlayerDeath()
+    {
+        this.restart();
     }
 
     /**

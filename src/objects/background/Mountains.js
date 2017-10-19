@@ -1,4 +1,4 @@
-import {WIDTH, HEIGHT} from './../../settings/Settings';
+import {WIDTH, HEIGHT, BACKGROUND_MOUNTAINS_SPEED} from './../../settings/Settings';
 
 /**
  *
@@ -16,6 +16,17 @@ export default class Mountains extends Phaser.TileSprite
         this.tileScale.y = HEIGHT / WIDTH;
 
         this.fixedToCamera = true;
+        this.move = true;
+    }
+
+    /**
+     *
+     */
+    update()
+    {
+        if (this.move) {
+            this.tilePosition.x += BACKGROUND_MOUNTAINS_SPEED;
+        }
     }
 
 }

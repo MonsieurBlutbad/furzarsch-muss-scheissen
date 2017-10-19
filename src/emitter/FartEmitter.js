@@ -4,7 +4,8 @@ const FART_PARTICLE_MAX_SPEED = 160;
 
 export default class FartEmitter extends Phaser.Particles.Arcade.Emitter {
 
-	constructor(game, x = null, y = null, maxParticles = null) {
+	constructor(game, x = null, y = null, maxParticles = null)
+    {
         super(game, x, y, maxParticles);
         this.bounce.setTo(PARTICLE_BOUNCE, PARTICLE_BOUNCE);
         this.setXSpeed(-40, 40);
@@ -13,10 +14,12 @@ export default class FartEmitter extends Phaser.Particles.Arcade.Emitter {
         // explode, lifespan, frequency, quantity
         this.start(false, 400, 10, 1);
         this.on = false;
+        this.setAlpha(0.3, 1);
         this.lifespan = 500;
     }
 
-    update() {
+    update()
+    {
 	    super.update();
         this.forEachAlive( function(p) {
             p.alpha= p.lifespan / this.lifespan * 4;

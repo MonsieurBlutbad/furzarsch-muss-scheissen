@@ -11,7 +11,7 @@ Obstacles:
 Bullets:
 - make shit leave the ass more beautiful
 XXX add diarrhea shit bullet
-- make diarrhea trigger after a short time
+- make diarrhea trigger after a short time?
 - add more shit splatters when shit hit something
 
 Background:
@@ -21,14 +21,16 @@ Background:
 - Add clouds
 
 Player:
-- Add death animation
+XXX Add death animation
 
 Toilets:
-- fix toilet hitboxes
+XXX fix toilet hitboxes
 - think about removing tank
 - add sprinkle animation when shit hits the bowl
 - create new toilet sprite with underlay
-- fix toilet positioning
+- add shit_flat to toilet when shitted
+- add flush
+XXX fix toilet positioning
 
 UI:
 - make Fartometer highlight when you add farts
@@ -46,3 +48,6 @@ XXX Add Combo Shits (hit every toilet in a row)
 
 Audio:
 - Add Sounds for everything
+
+General:
+- save and load highscore from database

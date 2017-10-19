@@ -1,5 +1,4 @@
-import Penis from './Penis';
-import Ass from './Ass';
+import EvilAss from './EvilAss';
 
 export default class Enemies extends Phaser.Group
 {
@@ -8,14 +7,11 @@ export default class Enemies extends Phaser.Group
 		super(game);
         this.game = game;
         this.level = level;
-        for (let i = 0; i < 10; i++) {
-       //     this.createEnemy();
-        }
     }
 
-    createPenis()
+    addEvilAss(x, y)
     {
-        let enemy = new Penis(this.game, Math.random() * this.game.width, Math.random() * this.game.height);
-        this.add(enemy);
+        let evilAss = new EvilAss(this.game, x, y);
+        this.add(evilAss);
     }
 }

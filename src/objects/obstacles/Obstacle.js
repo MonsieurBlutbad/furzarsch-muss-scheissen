@@ -1,3 +1,5 @@
+import Splatter from './../bullet/Splatter';
+
 
 export default class Obstacle extends Phaser.Sprite {
 
@@ -17,15 +19,12 @@ export default class Obstacle extends Phaser.Sprite {
     isHit(bullet, obstacle) {
         let x = bullet.x - obstacle.x;
         let y = bullet.y - obstacle.y;
-        let shitFlat = this.game.make.sprite(
+        let splatter = new Splatter(
+            this.game,
             Math.max(-obstacle.width/2, Math.min(x, obstacle.width/2)),
-            Math.max(-obstacle.height/2, Math.min(y, obstacle.height/2)),
-            'shit_flat'
+            Math.max(-obstacle.height/2, Math.min(y, obstacle.height/2))
         );
-
-        shitFlat.anchor.setTo(0.5,0.5);
-
-        obstacle.addChild(shitFlat);
+        obstacle.addChild(splatter);
     }
 
     getHitBox()

@@ -1,24 +1,19 @@
 import Shit from './Shit';
+import EvilShit from './EvilShit';
 import Diarrhea from './Diarrhea';
 
-export default class Bullets extends Phaser.Group {
+export default class Bullets extends Phaser.Group
+{
 
-    constructor(game, player) {
+    constructor(game, shooter)
+    {
 		super(game);
-        this.game = game;
-        this.player = player;
+		this.shooter = shooter;
     }
 
-    createBullet(speed) {
-        const velocity = {
-            x: -0.66 * speed * Math.sin(this.player.angle * Math.PI / 180),
-            y: speed * Math.cos(this.player.angle * Math.PI / 180),
-        };
-        let Bullet = Shit;
-        if (this.player.hasDiarrhea) {
-            Bullet = Diarrhea;
-        }
-        let sprite = new Bullet(this.game, this.player.x, this.player.y, velocity);
+    createBullet(x, y, velocity, Bullet = Shit)
+    {
+        let sprite = new Bullet(this.game, x, y, velocity);
         this.add(sprite);
     }
 }
