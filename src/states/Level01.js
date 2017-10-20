@@ -54,7 +54,7 @@ export default class GameState extends Phaser.State
         this.obstacles = new Obstacles(this.game, this);
         this.worldObjects.add(this.obstacles);
 
-        this.enemies = new Enemies(this.game, this);
+        this.enemies = new Enemies(this.game, this, this.player);
         this.worldObjects.add(this.enemies);
 
         this.toilets = new Toilets(this.game, this);
@@ -124,6 +124,13 @@ export default class GameState extends Phaser.State
             }
         }
 
+        for (let i = 0; i < 2; i++) {
+            let gridIndex = Math.floor(Math.random() * grid.length);
+            this.enemies.addDick(offsetX + grid[gridIndex][0],  grid[gridIndex][1]);
+            if (gridIndex > -1) {
+                grid.splice(gridIndex, 1);
+            }
+        }
 
         for (let i = 0; i < 4; i++) {
             let gridIndex = Math.floor(Math.random() * grid.length);

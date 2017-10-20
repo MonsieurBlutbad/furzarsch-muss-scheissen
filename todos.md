@@ -26,7 +26,7 @@ XXX Add death animation
 Toilets:
 XXX fix toilet hitboxes
 - think about removing tank
-- add sprinkle animation when shit hits the bowl
+xxx add sprinkle animation when shit hits the bowl
 - create new toilet sprite with underlay
 - add shit_flat to toilet when shitted
 - add flush

@@ -51,7 +51,7 @@ export default class Player extends Phaser.Sprite {
         this.anchor.setTo(0.5, 0.5);
 
         // Add Emitter
-        this.fartEmitter = new FartEmitter(game, 0, this.height / 2, 50);
+        this.fartEmitter = new FartEmitter(game, 0, this.height / 2);
         this.addChild(this.fartEmitter);
 
         // Add Sounds

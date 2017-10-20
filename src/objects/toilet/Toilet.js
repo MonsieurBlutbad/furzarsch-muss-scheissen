@@ -135,8 +135,10 @@ export default class Toilet extends Phaser.Sprite
         console.log(this);
          if (hitBox === this.hitBoxBowl) {
             this.shits ++;
+            let waterEmitter = new WaterEmitter(this.game);
+            this.hitBoxBowl.addChild(waterEmitter);
+            waterEmitter.start();
             this.shitHitTheBowlEvent.dispatch(this, bullet);
-            this.waterEmitter.start();
             console.log('It\'s a shit in the bowl!!!!');
         } else {
             console.log(this, this.x, hitBox.x, bullet.x);
@@ -145,6 +147,7 @@ export default class Toilet extends Phaser.Sprite
             hitBox.addChild(shitFlat);
         }
     }
+
 
     /**
      *
