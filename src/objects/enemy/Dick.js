@@ -1,4 +1,6 @@
-export default class Dick extends Phaser.Sprite {
+import Enemy from './Enemy';
+
+export default class Dick extends Enemy {
     constructor(game, player, x, y) {
 		super(game, x, y, 'penis');
         this.player = player;
