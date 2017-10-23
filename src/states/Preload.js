@@ -28,9 +28,10 @@ export default class Preload extends Phaser.State {
         this.game.load.image('evil_shit', 'image/evil_shit.png');
 
         this.game.load.image('background_sky', 'image/background_sky.jpg');
+        this.game.load.image('background_clouds', 'image/background_clouds_1024.png');
         this.game.load.image('background_mountains', 'image/background_mountains_1024.png');
 
-        this.game.load.image('toilet', 'image/toilet_96x120.png');
+        this.game.load.image('toilet', 'image/toilet_drawn_96x120.png');
         this.game.load.image('toilet_tank', 'image/toilet_tank.png');
         this.game.load.image('toilet_bowl', 'image/toilet_bowl.png');
 

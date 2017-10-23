@@ -1,5 +1,6 @@
 import Sky from './Sky'
 import Mountains from './Mountains'
+import Clouds from './Clouds'
 
 export default class Background extends Phaser.Group {
 
@@ -11,8 +12,8 @@ export default class Background extends Phaser.Group {
         this.add(this.sky);
         this.mountains = new Mountains(this.game);
         this.add(this.mountains);
-
-        this.moveMountains = true;
+        this.clouds = new Clouds(this.game);
+        this.add(this.clouds);
     }
 
 
@@ -22,6 +23,7 @@ export default class Background extends Phaser.Group {
     update()
     {
         this.mountains.update();
+        this.clouds.update();
     }
 
     /**
@@ -30,6 +32,7 @@ export default class Background extends Phaser.Group {
     onPlayerDeathStart()
     {
         this.mountains.move = false;
+        this.clouds.move = false;
     }
 
 }

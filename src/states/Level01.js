@@ -343,12 +343,11 @@ export default class GameState extends Phaser.State
             this.obstacles, this.enemies,
             function(obstacle, enemy) {
                 enemy.speed *= -1;
-                enemy.body.velocity.x *= 0.98;
             },
             function(obstacle, enemy) {
                 return enemy.alive;
             }, this
-    );
+        );
 
         // Bullets & Toilets
         this.toilets.forEachExists(
@@ -365,7 +364,6 @@ export default class GameState extends Phaser.State
                 );
             }, this
         );
-
     }
 
     /**
