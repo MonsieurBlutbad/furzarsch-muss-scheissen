@@ -36,7 +36,7 @@ export default class Dick extends Enemy {
     {
         const desiredAngle = Math.atan2(this.y - this.player.y, this.x - this.player.x) / (Math.PI / 180) - 90;
 
-        this.angle = desiredAngle;
+        this.angle += Math.max(-1, Math.min(1, (desiredAngle + 360) - (this.angle + 360)));
 
         const speed = 300;
 
