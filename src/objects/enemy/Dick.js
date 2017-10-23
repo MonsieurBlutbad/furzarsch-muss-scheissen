@@ -23,17 +23,17 @@ export default class Dick extends Enemy {
         this.checkWorldBounds = true;
         this.outOfBoundsKill = true;
         this.health = 100;
-    }
-
-    isHit(bullet) {
-        this.health -= bullet.damage;
-        if (this.health <= 0) {
-            this.kill();
-        }
+        this.body.height = this.height * 0.3;
+        this.body.offset.setTo(0, this.height * 0.3);
     }
 
     update()
     {
+        if (!this.alive) {
+            return;
+        }
+
+        this.game.debug.body(this);
         const desiredAngle = Math.atan2(this.y - this.player.y, this.x - this.player.x) / (Math.PI / 180) - 90;
 
         this.angle += Math.max(-1, Math.min(1, (desiredAngle + 360) - (this.angle + 360)));

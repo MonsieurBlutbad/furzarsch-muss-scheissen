@@ -10,10 +10,9 @@ export default class EvilAss extends Enemy
 		super(game, x, y, 'evil_ass');
         this.body.immovable = true;
         this.angle = 180;
-        this.health = 100;
-        this.killsPlayerOnHit = false;
+        this.health = 300;
         this.bullets = new Bullets(this.game, this);
-        this.game.time.events.loop(1200, this.startShaking, this);
+        this.shitEvent = this.game.time.events.loop(1200, this.startShaking, this);
         this.speed = -0.5;
         this.isFarting = false;
         this.isShaking = false;
@@ -67,6 +66,11 @@ export default class EvilAss extends Enemy
         };
 
         this.bullets.createBullet(this.x - 6, this.y + this.height/4, velocity, EvilShit);
+    }
+
+    die()
+    {
+        this.game.time.events.remove(this.shitEvent);
     }
 
 }

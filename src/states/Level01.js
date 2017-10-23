@@ -48,9 +48,6 @@ export default class GameState extends Phaser.State
         this.collectables =  new Collectables(this.game, this);
         this.worldObjects.add(this.collectables);
 
-        this.items = this.game.add.group();
-        this.worldObjects.add(this.items);
-
         this.obstacles = new Obstacles(this.game, this);
         this.worldObjects.add(this.obstacles);
 
@@ -242,7 +239,9 @@ export default class GameState extends Phaser.State
         }
 
         const playerHitsObject = function(player, object) {
-            player.hitsObject(object);
+            if (object.alive) {
+                player.hitsObject(object);
+            }
         };
 
         const enemyBullets = [];
@@ -274,10 +273,13 @@ export default class GameState extends Phaser.State
             }, this
         );
         // Player & Enemies
-        this.game.physics.arcade.collide(
+        this.game.physics.arcade.overlap(
             this.player,
             this.enemies,
-            playerHitsObject, null, this
+            playerHitsObject,
+            function(player, enemy) {
+                return enemy.alive;
+            }, this
         );
 
         // Player & Items
@@ -325,20 +327,28 @@ export default class GameState extends Phaser.State
         this.game.physics.arcade.overlap(
             [this.player.bullets, ...enemyBullets],
             this.enemies,
-            function(bullet, something) {
-                if (bullet.isArmed) {
-                    bullet.hitSomething(bullet, something);
-                    something.isHit.call(something, bullet, something);
+            function(bullet, enemy) {
+                if (bullet.isArmed && enemy.alive) {
+                    bullet.hitSomething(bullet, enemy);
+                    enemy.isHit.call(enemy, bullet, enemy);
                 }
-            }, null, this
+            },
+            function(bullet, enemy) {
+                return bullet.isArmed && enemy.alive && bullet.shooter !== enemy;
+            }, this
         );
 
+        // Enemies & Obstacles
         this.game.physics.arcade.collide(
             this.obstacles, this.enemies,
             function(obstacle, enemy) {
                 enemy.speed *= -1;
-            }
-        );
+                enemy.body.velocity.x *= 0.98;
+            },
+            function(obstacle, enemy) {
+                return enemy.alive;
+            }, this
+    );
 
         // Bullets & Toilets
         this.toilets.forEachExists(
