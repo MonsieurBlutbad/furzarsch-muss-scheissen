@@ -96,7 +96,7 @@ export default class GameState extends Phaser.State
 
         grid.splice(grid.length - gridWidth, gridWidth);
 
-
+        // Evil Ass
         for (let i = 0; i < 1; i++) {
             let gridIndex = grid.length - (Math.floor(Math.random() * (gridWidth - 2)) + 1);
             this.enemies.addEvilAss(offsetX + grid[gridIndex][0], grid[gridIndex][1]);
@@ -105,6 +105,7 @@ export default class GameState extends Phaser.State
             }
         }
 
+        // Box
         for (let i = 0; i < 8; i++) {
             let gridIndex = Math.floor(Math.random() * grid.length);
             this.obstacles.addBox(offsetX + grid[gridIndex][0],  grid[gridIndex][1]);
@@ -113,7 +114,8 @@ export default class GameState extends Phaser.State
             }
         }
 
-        for (let i = 0; i < 4; i++) {
+        // Spikes
+        for (let i = 0; i < 2; i++) {
             let gridIndex = Math.floor(Math.random() * grid.length);
             this.obstacles.addSpikes(offsetX + grid[gridIndex][0],  grid[gridIndex][1]);
             if (gridIndex > -1) {
@@ -121,14 +123,24 @@ export default class GameState extends Phaser.State
             }
         }
 
-        for (let i = 0; i < 2; i++) {
+        // Dick
+      /*  for (let i = 0; i < 1; i++) {
             let gridIndex = Math.floor(Math.random() * grid.length);
             this.enemies.addDick(offsetX + grid[gridIndex][0],  grid[gridIndex][1]);
             if (gridIndex > -1) {
                 grid.splice(gridIndex, 1);
             }
+        }*/
+      // Woman
+        for (let i = 0; i < 1; i++) {
+            let gridIndex = Math.floor(Math.random() * grid.length);
+            this.enemies.addMultiAss(offsetX + grid[gridIndex][0],  grid[gridIndex][1]);
+            if (gridIndex > -1) {
+                grid.splice(gridIndex, 1);
+            }
         }
 
+        // Burger
         for (let i = 0; i < 4; i++) {
             let gridIndex = Math.floor(Math.random() * grid.length);
             this.collectables.addBurger(offsetX + grid[gridIndex][0],  grid[gridIndex][1]);
@@ -136,13 +148,15 @@ export default class GameState extends Phaser.State
                 grid.splice(gridIndex, 1);
             }
         }
+        // Sauerkraut
         for (let i = 0; i < 2; i++) {
             let gridIndex = Math.floor(Math.random() * grid.length);
-            this.collectables.addBean(offsetX + grid[gridIndex][0],  grid[gridIndex][1]);
+            this.collectables.addSauerkraut(offsetX + grid[gridIndex][0],  grid[gridIndex][1]);
             if (gridIndex > -1) {
                 grid.splice(gridIndex, 1);
             }
         }
+        // Chili
         for (let i = 0; i < 2; i++) {
             let gridIndex = Math.floor(Math.random() * grid.length);
             this.collectables.addChili(offsetX + grid[gridIndex][0],  grid[gridIndex][1]);
@@ -151,6 +165,7 @@ export default class GameState extends Phaser.State
             }
         }
 
+        // Toilet
         for (let i = 0; i < 2; i++) {
             let gridIndex = Math.floor(Math.random() * grid.length);
             this.toilets.addToilet(offsetX + grid[gridIndex][0], grid[gridIndex][1]);
@@ -317,7 +332,6 @@ export default class GameState extends Phaser.State
             this.player,
             [...enemyBullets],
             function(player, bullet) {
-                console.log('hiiiit');
                 bullet.hitSomething(bullet, player);
                 player.die();
             }
@@ -353,7 +367,7 @@ export default class GameState extends Phaser.State
         this.toilets.forEachExists(
             function(child) {
                 this.game.physics.arcade.overlap(
-                    this.player.bullets,
+                    [this.player.bullets, ...enemyBullets],
                     [...child.getHitBox()],
                     function(bullet, something) {
                         if (bullet.isArmed) {

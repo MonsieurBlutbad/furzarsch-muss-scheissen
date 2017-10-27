@@ -19,11 +19,14 @@ export default class Enemy extends Phaser.Sprite
     {
         let x = bullet.x - enemy.x;
         let y = bullet.y - enemy.y;
+
         let splatter = new Splatter(
             this.game,
-            Math.max(-enemy.width/2, Math.min(x, enemy.width/2)),
-            Math.max(-enemy.height/2, Math.min(y, enemy.height/2))
+            Math.max(-enemy.body.width/2, Math.min(x, enemy.body.width/2)),
+            Math.max(-enemy.body.height/2, Math.min(y, enemy.body.height/2))
         );
+
+        splatter.scale.setTo(1/this.scale,1/this.scale);
         enemy.addChild(splatter);
         this.health -= bullet.damage;
         if (this.health <= 0) {

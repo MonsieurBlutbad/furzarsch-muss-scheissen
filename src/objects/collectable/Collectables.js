@@ -1,4 +1,4 @@
-import Bean from './Bean';
+import Sauerkraut from './Sauerkraut';
 import Burger from './Burger';
 import Chili from './Chili';
 
@@ -30,9 +30,9 @@ export default class Collectables extends Phaser.Group {
      * @param x
      * @param y
      */
-    addBean(x, y)
+    addSauerkraut(x, y)
     {
-        this.addCollectable(Bean, x, y);
+        this.addCollectable(Sauerkraut, x, y);
     }
 
     /**

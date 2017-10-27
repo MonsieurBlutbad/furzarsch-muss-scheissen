@@ -1,5 +1,7 @@
 import EvilAss from './EvilAss';
 import Dick from './Dick';
+import Woman from './Woman';
+import MultiAss from './MultiAss';
 
 export default class Enemies extends Phaser.Group
 {
@@ -21,6 +23,18 @@ export default class Enemies extends Phaser.Group
     {
         let dick = new Dick(this.game, this.player, x, y);
         this.add(dick);
+    }
+
+    addWoman(x, y)
+    {
+        let woman = new Woman(this.game, this.player, x, y);
+        this.add(woman);
+    }
+
+    addMultiAss(x, y)
+    {
+        let multiAss = new MultiAss(this.game, x, y);
+        this.add(multiAss);
     }
 
     update()

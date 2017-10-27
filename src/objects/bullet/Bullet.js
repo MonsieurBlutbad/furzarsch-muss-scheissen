@@ -13,10 +13,10 @@ export default class Bullet extends Phaser.Sprite
      * @param damage
      * @param velocity
      */
-    constructor(game, x, y, key, damage, velocity)
+    constructor(game, x, y, key, damage, velocity, shooter)
     {
         super(game, x, y, key);
-
+        this.shooter = shooter;
         this.game = game;
         this.game.physics.arcade.enable(this);
         this.damage = damage;
@@ -25,9 +25,7 @@ export default class Bullet extends Phaser.Sprite
         this.body.velocity.x = velocity.x;
         this.body.velocity.y = velocity.y;
         this.isArmed = false;
-        this.game.time.events.add(100, function() {
             this.isArmed = true;
-        }.bind(this));
         this.anchor.setTo(0.5, 0.5);
         this.game.add.sprite(this);
     }

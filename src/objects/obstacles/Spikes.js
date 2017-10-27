@@ -13,5 +13,8 @@ export default class Spikes extends Obstacle {
     constructor(game, x, y) {
 		super(game, x, y, 'spikes');
         this.killsPlayerOnHit = true;
+        this.body.height = this.height * 0.66;
+        this.body.width = this.width * 0.66;
+        this.body.offset.setTo(this.width * 0.17, this.height * 0.17);
     }
 }

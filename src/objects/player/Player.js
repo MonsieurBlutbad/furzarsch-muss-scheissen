@@ -380,7 +380,6 @@ export default class Player extends Phaser.Sprite {
      */
     hitsObject(object)
     {
-        console.log(object);
         this.body.velocity.x *= 0.92;
         if (object.killsPlayerOnHit) {
             this.die();

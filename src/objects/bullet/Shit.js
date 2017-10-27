@@ -10,9 +10,9 @@ export default class Shit extends Bullet {
      * @param y
      * @param velocity
      */
-    constructor(game, x, y, velocity)
+    constructor(game, x, y, velocity, shooter)
     {
-        super(game, x, y, 'shit', 100, velocity);
+        super(game, x, y, 'shit', 100, velocity, shooter);
         let tween = this.game.add.tween(this).to( { angle: 360 }, 5000, "Linear", true).loop(true);
     }
 }

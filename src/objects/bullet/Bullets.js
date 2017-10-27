@@ -13,7 +13,7 @@ export default class Bullets extends Phaser.Group
 
     createBullet(x, y, velocity, Bullet = Shit)
     {
-        let sprite = new Bullet(this.game, x, y, velocity);
+        let sprite = new Bullet(this.game, x, y, velocity, this.shooter);
         this.add(sprite);
     }
 }

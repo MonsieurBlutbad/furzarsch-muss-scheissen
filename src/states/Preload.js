@@ -4,13 +4,15 @@ export default class Preload extends Phaser.State {
         this.game.load.image('fart_particle', 'image/farticle.png');
         this.game.load.image('blood_particle', 'image/blood_particle.png');
         this.game.load.image('water_particle', 'image/water_particle.png');
-        this.game.load.image('bean', 'image/bean.png');
+        this.game.load.image('sauerkraut', 'image/sauerkraut.png');
         this.game.load.image('shit', 'image/shit.png');
         this.game.load.image('diarrhea', 'image/diarrhea.png');
         this.game.load.image('shit_flat', 'image/shit_flat.png');
         this.game.load.image('grass', 'image/grass.png');
-        this.game.load.image('box', 'image/box.png');
+        this.game.load.image('baby', 'image/baby.png');
+        this.game.load.image('box', 'image/box.jpg');
         this.game.load.image('spikes', 'image/spikes.png');
+        this.game.load.image('woman', 'image/woman.png');
         this.game.load.image('scythe_box', 'image/scythe_box.png');
         this.game.load.image('scythe_stick', 'image/scythe_stick.png');
         this.game.load.image('scythe_blade', 'image/scythe_blade.png');
@@ -25,6 +27,7 @@ export default class Preload extends Phaser.State {
         this.game.load.image('ass_cheek_left', 'image/ass_cheek_left.png');
         this.game.load.image('ass_cheek_right', 'image/ass_cheek_right.png');
         this.game.load.image('evil_ass', 'image/evil_ass.png');
+        this.game.load.spritesheet('multi_ass', 'image/multiass_spritesheet.png', 128, 128, 9);
         this.game.load.image('evil_shit', 'image/evil_shit.png');
 
         this.game.load.image('background_sky', 'image/background_sky.jpg');

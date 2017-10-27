@@ -1,4 +1,5 @@
 import WaterEmitter from './../../emitter/WaterEmitter'
+import Splatter from './../bullet/Splatter';
 
 const MIN_TIME_TO_TOGGLE_LID = 3000;
 const MAX_TIME_TO_TOGGLE_LID = 8000;
@@ -141,14 +142,16 @@ export default class Toilet extends Phaser.Sprite
             this.shitHitTheBowlEvent.dispatch(this, bullet);
             console.log('It\'s a shit in the bowl!!!!');
         } else {
-            console.log(this, this.x, hitBox.x, bullet.x);
-            let shitFlat = this.game.make.sprite(bullet.x - hitBox.x, 0, 'shit_flat');
-            shitFlat.anchor.setTo(0.5, 0.9);
-            hitBox.addChild(shitFlat);
+             let x = bullet.x - this.x;
+             let y = bullet.y - this.y;
+             let splatter = new Splatter(
+                 this.game,
+                 Math.max(-this.width/2, Math.min(x, this.width/2)),
+                 Math.max(-this.height/2, Math.min(y, this.height/2))
+             );
+             hitBox.addChild(splatter);
         }
     }
-
-
     /**
      *
      */
