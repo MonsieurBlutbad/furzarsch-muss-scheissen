@@ -15,7 +15,7 @@ export default class LevelUI extends Phaser.Group {
         this.add(this.shitCounter);
         this.score = new Score(this.game, 20, 100);
         this.add(this.score);
-        this.highscore = new Highscore(this.game, 20, 70);
+        this.highscore = new Highscore(this.game, 0, 0);
         this.add(this.highscore);
     }
 
