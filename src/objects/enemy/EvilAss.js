@@ -64,8 +64,7 @@ export default class EvilAss extends Enemy
 
     startShit()
     {
-        console.log('erstma furze');
-        this.isFarting = true;
+            this.isFarting = true;
         this.game.time.events.add(100, this.shit, this);
     }
 

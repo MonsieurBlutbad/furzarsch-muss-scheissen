@@ -8,6 +8,7 @@ import Toilets from './../objects/toilet/Toilets';
 import LevelUI from './../ui/LevelUI';
 import Controls from './../input/Controls';
 import {WIDTH, HEIGHT, CAMERA_SPEED} from 'settings/Settings';
+import Repository from './../persistance/Repository';
 
 /**
  *
@@ -23,6 +24,7 @@ export default class GameState extends Phaser.State
 
         this.currentScreen = 0;
         this.enteredNewScreenEvent = new Phaser.Signal();
+        this.repository = new Repository();
 
         this.moveCamera = true;
 
@@ -58,6 +60,8 @@ export default class GameState extends Phaser.State
         this.worldObjects.add(this.toilets);
 
         this.levelUI = new LevelUI(this.game, this);
+
+        this.repository.getHighscore(1, this.levelUI.highscore.setText.bind(this.levelUI.highscore));
 
         this.addEventListener();
 
@@ -186,6 +190,7 @@ export default class GameState extends Phaser.State
         this.player.deathStartEvent.add(this.onPlayerDeathStart, this);
         this.player.deathStartEvent.add(this.background.onPlayerDeathStart, this.background);
         this.player.deathEvent.add(this.onPlayerDeath, this);
+        this.player.deathStartEvent.add(this.repository.saveScore.bind(this.repository, 'test', this.player.getScore.bind(this.player)), this.repository);
         this.enteredNewScreenEvent.add(this.addNewObjects , this);
     }
 

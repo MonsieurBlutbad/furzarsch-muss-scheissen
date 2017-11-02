@@ -360,6 +360,10 @@ export default class Player extends Phaser.Sprite {
         this.combo = combo;
     }
 
+    getScore() {
+        return this.score;
+    }
+
     /**
      * @param item
      */
@@ -391,7 +395,6 @@ export default class Player extends Phaser.Sprite {
      */
     die()
     {
-        console.log(':(');
         if (this.alive) {
             console.log('Player die');
             this.alive = false;

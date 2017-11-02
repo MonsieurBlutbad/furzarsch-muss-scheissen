@@ -1,7 +1,7 @@
-import RainbowText from './../text/RainbowText';
 import Fartometer from './Fartometer';
 import ShitCounter from './ShitCounter';
 import Score from './Score';
+import Highscore from './Highscore';
 
 export default class LevelUI extends Phaser.Group {
     constructor(game, level) {
@@ -15,6 +15,8 @@ export default class LevelUI extends Phaser.Group {
         this.add(this.shitCounter);
         this.score = new Score(this.game, 20, 100);
         this.add(this.score);
+        this.highscore = new Highscore(this.game, 20, 70);
+        this.add(this.highscore);
     }
 
     addEventListener() {
@@ -22,11 +24,6 @@ export default class LevelUI extends Phaser.Group {
         this.level.player.amountOfFoodChangedEvent.add(this.updateAmountOfFoodListener, this);
         this.level.player.fartometerChangedEvent.add(this.updateFartometerListener, this);
         this.level.player.scoreChangedEvent.add(this.score.updateScoreListener, this.score);
-        this.level.player.scoreChangedEvent.add(this.updateScoreListener, this);
-    }
-
-    updateScoreListener(player, score, incremenent) {
-
     }
 
     updateAmountOfShitsListener(context, amountOfShits) {
